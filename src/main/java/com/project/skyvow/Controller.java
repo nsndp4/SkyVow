@@ -95,8 +95,8 @@ public class Controller {
         return "Tickets created successfully"+createTickets.size();
     }
 
-    @GetMapping("/api/v1/tickets/{id}")
-    public String getById(@PathVariable int id) {
+    @GetMapping("/api/v1/ticket/{id}")
+    public String getTicketById(@PathVariable int id) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
                 System.out.println("The ticket:" + ts.getName());
@@ -105,6 +105,18 @@ public class Controller {
         }
         return "Not found";
     }
+
+    @GetMapping("/api/v1/tickets/{id}")
+    public Ticket getById(@PathVariable int id) {
+        for (Ticket ts : ticketList) {
+            if (ts.getId() == id) {
+                System.out.println("The ticket:" + ts.getName());
+                return ts;
+            }
+        }
+        return null;
+    }
+
 
     @GetMapping("/api/v1/tickets")
     public List<Ticket> getFilteredAndPagedTickets(
