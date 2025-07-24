@@ -15,7 +15,6 @@ public class Ticket {
     private String reporter;
     private String desc;
     private String priority;
-    private String category;
     private List<String> comment = new ArrayList<>();
 
     public int getId() {return id;}
@@ -93,13 +92,6 @@ public class Ticket {
         this.comment.add(newComment);
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 
 }
 
