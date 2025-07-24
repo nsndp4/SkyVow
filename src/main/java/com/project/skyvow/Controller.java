@@ -18,7 +18,7 @@ public class Controller {
     Ticket ticket = new Ticket();
 
 
-   @PostMapping("/api/v1/tickets/different")
+   @PostMapping("/api/v1/tickets/CreateDifferentTicketIds")
    public List<Ticket> createDifferent(@RequestBody List<Ticket> createTickets){
        for(Ticket createticket:createTickets){
            Ticket ticket=new Ticket();
@@ -64,7 +64,7 @@ public class Controller {
 
     }
 
-    @PostMapping("/api/v1/tickets")
+    @PostMapping("/api/v1/tickets/CreateNewTickets")
     public List<Ticket> createMultipleTicket(@RequestBody List<Ticket> createTickets) {
         for (Ticket createticket : createTickets) {
             Ticket ticket = new Ticket();
@@ -89,7 +89,7 @@ public class Controller {
 
 
 
-    @GetMapping("/api/v1/tickets/{id}")
+    @GetMapping("/api/v1/tickets/GetsEntireTicketDescription/{id}")
     public Ticket getById(@PathVariable int id) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
@@ -101,7 +101,7 @@ public class Controller {
     }
 
 
-    @GetMapping("/api/v1/tickets")
+    @GetMapping("/api/v1/tickets/DisplaysCertainNumberOfTicketsBasedOnPageNumber")
     public List<Ticket> getFilteredAndPagedTickets(
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String assignee,
@@ -138,7 +138,7 @@ public class Controller {
         return filtered.subList(fromIndex, toIndex);
     }
 
-    @PutMapping("api/v1/tickets/{id}")
+    @PutMapping("api/v1/tickets/UpdatingATicket/{id}")
     public Ticket updates(@PathVariable int id, @RequestBody Ticket updatedticket) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
@@ -159,7 +159,7 @@ public class Controller {
         return null;
     }
 
-    @PutMapping("api/v1/tickets/{id}/assign")
+    @PutMapping("api/v1/tickets/AssignATicketToAUser/{id}")
     public Ticket assign(@PathVariable int id, @RequestBody Ticket assigner) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
@@ -170,7 +170,7 @@ public class Controller {
         return null;
     }
 
-    @PutMapping("/api/v1/tickets/{id}/status")
+    @PutMapping("/api/v1/tickets/UpdateTheStatusOfATicket/{id}")
     public Ticket statusUpdate(@PathVariable int id, @RequestBody Ticket upStat) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
@@ -181,7 +181,7 @@ public class Controller {
         return null;
     }
 
-    @PostMapping("/api/v1/tickets/{id}/comments")
+    @PostMapping("/api/v1/tickets/AddsANewCommentToATicket/{id}")
     public Ticket newComm(@PathVariable int id, @RequestBody String newComment) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
@@ -193,7 +193,7 @@ public class Controller {
     }
 
 
-    @GetMapping("/api/v1/tickets/{id}/comments")
+    @GetMapping("/api/v1/tickets/RetrievesAllCommentsOfATicket/{id}")
     public List<String> getAllComments(@PathVariable int id) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
@@ -208,7 +208,7 @@ public class Controller {
     }
 
 
-    @DeleteMapping("/api/v1/tickets/{id}")
+    @DeleteMapping("/api/v1/tickets/DeletesATicket/{id}")
     public String deleteTicket(@PathVariable int id) {
        Iterator<Ticket> iterator=ticketList.iterator();
        while(iterator.hasNext()){
