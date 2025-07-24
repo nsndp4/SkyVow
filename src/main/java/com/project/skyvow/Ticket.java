@@ -92,6 +92,19 @@ public class Ticket {
         this.comment.add(newComment);
     }
 
-
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", ids='" + ids + '\'' +
+                ", name='" + name + '\'' +
+                ", status='" + status + '\'' +
+                ", assignee='" + assignee + '\'' +
+                ", reporter='" + reporter + '\'' +
+                ", desc='" + desc + '\'' +
+                ", priority='" + priority + '\'' +
+                ", comment=" + comment +
+                '}';
+    }
 }
 

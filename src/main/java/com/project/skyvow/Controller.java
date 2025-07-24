@@ -11,6 +11,7 @@ import java.util.Random;
 import static java.time.Clock.tick;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000") // Allow frontend
 public class Controller {
 
     List<Ticket> ticketList = new ArrayList<>();
@@ -54,6 +55,14 @@ public class Controller {
         return ticketList;
    }
 
+
+    @PostMapping("/api/v1/tickets/createNewTicket")
+    public void createNewTicket(@RequestBody Ticket ticket){
+        ticketList.add(ticket);
+
+        System.out.println(ticket);
+
+    }
 
     @PostMapping("/api/v1/tickets")
     public List<Ticket> createMultipleTicket(@RequestBody List<Ticket> createTickets) {
