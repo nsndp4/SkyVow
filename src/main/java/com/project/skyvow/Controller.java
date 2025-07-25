@@ -59,12 +59,10 @@ public class Controller {
     @PostMapping("/api/v1/tickets/createNewTicket")
     public void createNewTicket(@RequestBody Ticket ticket){
         ticketList.add(ticket);
-
         System.out.println(ticket);
-
     }
 
-    @PostMapping("/api/v1/tickets/createNewTickets")
+    @PostMapping("/api/v1/tickets/createMultipleTickets")
     public List<Ticket> createMultipleTicket(@RequestBody List<Ticket> createTickets) {
         for (Ticket createticket : createTickets) {
             Ticket ticket = new Ticket();
