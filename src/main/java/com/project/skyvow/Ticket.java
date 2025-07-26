@@ -16,6 +16,8 @@ public class Ticket {
     private String desc;
     private String priority;
     private List<String> comment = new ArrayList<>();
+    private String shortDesc;
+    private String problemDesc;
 
     public int getId() {return id;}
 
@@ -92,6 +94,22 @@ public class Ticket {
         this.comment.add(newComment);
     }
 
+    public String getProblemDesc() {
+        return problemDesc;
+    }
+
+    public void setProblemDesc(String problemDesc) {
+        this.problemDesc = problemDesc;
+    }
+
+    public String getShortDesc() {
+        return shortDesc;
+    }
+
+    public void setShortDesc(String shortDesc) {
+        this.shortDesc = shortDesc;
+    }
+
     @Override
     public String toString() {
         return "Ticket{" +
@@ -104,6 +122,8 @@ public class Ticket {
                 ", desc='" + desc + '\'' +
                 ", priority='" + priority + '\'' +
                 ", comment=" + comment +
+                ", shortDesc='" + shortDesc + '\'' +
+                ", problemDesc='" + problemDesc + '\'' +
                 '}';
     }
 }

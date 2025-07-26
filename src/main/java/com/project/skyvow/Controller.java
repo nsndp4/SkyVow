@@ -1,6 +1,8 @@
 package com.project.skyvow;
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -56,11 +58,6 @@ public class Controller {
    }
 
 
-    @PostMapping("/api/v1/tickets/createNewTicket")
-    public void createNewTicket(@RequestBody Ticket ticket){
-        ticketList.add(ticket);
-        System.out.println(ticket);
-    }
 
     @PostMapping("/api/v1/tickets/createMultipleTickets")
     public List<Ticket> createMultipleTicket(@RequestBody List<Ticket> createTickets) {
@@ -218,4 +215,73 @@ public class Controller {
        }
        return null;
     }
+
+
+    @PostMapping("/api/v1/tickets/createNewTicket")
+    public ResponseEntity<Ticket> createNewTicket(@RequestBody Ticket ticket) {
+        int newId = ticketList.size() + 1;
+        ticket.setId(newId);
+
+        // Always set status as OPEN
+        ticket.setStatus("OPEN");
+
+        // Randomly assign category and generate corresponding ID
+        String[] categories = {"incident", "problem", "change", "general"};
+        String category = categories[new Random().nextInt(categories.length)];
+
+        String prefix;
+        switch (category.toLowerCase()) {
+            case "incident":
+                prefix = "INC";
+                break;
+            case "problem":
+                prefix = "PRB";
+                break;
+            case "change":
+                prefix = "CHG";
+                break;
+            default:
+                prefix = "GEN";
+        }
+
+        int randomNumber = new Random().nextInt(90000) + 10000;
+        ticket.setIds(prefix + randomNumber);
+
+        // Use shortDesc as name if needed
+        if (ticket.getName() == null || ticket.getName().isEmpty()) {
+            ticket.setName(ticket.getShortDesc() != null ? ticket.getShortDesc() : "Ticket " + newId);
+        }
+
+        // Use shortDesc as desc fallback
+        if (ticket.getDesc() == null || ticket.getDesc().isEmpty()) {
+            ticket.setDesc(ticket.getShortDesc() != null ? ticket.getShortDesc() : "N/A");
+        }
+
+        if (ticket.getComment() == null) {
+            ticket.setComment(new ArrayList<>());
+        }
+
+        ticketList.add(ticket);
+
+        System.out.println("Created Ticket: " + ticket + " [Category: " + category + "]");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
+    }
+
+
+    @DeleteMapping("/api/v1/tickets/deletesATicketByIds/{ids}")
+    public ResponseEntity<String> deleteTicketByIds(@PathVariable String ids) {
+        Iterator<Ticket> iterator = ticketList.iterator();
+        while (iterator.hasNext()) {
+            Ticket ts = iterator.next();
+            if (ts.getIds().equalsIgnoreCase(ids)) {
+                iterator.remove();
+                return ResponseEntity.ok("Ticket with IDS: " + ids + " is deleted");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ticket with IDS: " + ids + " not found");
+    }
+
+
+
 }
