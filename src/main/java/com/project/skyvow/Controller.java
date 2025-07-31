@@ -225,7 +225,7 @@ public class Controller {
         // Always set status as OPEN
         ticket.setStatus("OPEN");
 
-        // Randomly assign category and generate corresponding ID
+        // Randomly assign category and generate corresponding unique ID
         String[] categories = {"incident", "problem", "change", "general"};
         String category = categories[new Random().nextInt(categories.length)];
 
@@ -244,15 +244,29 @@ public class Controller {
                 prefix = "GEN";
         }
 
-        int randomNumber = new Random().nextInt(90000) + 10000;
-        ticket.setIds(prefix + randomNumber);
+        // ✅ Ensure unique ticket ID
+        String generatedId = "";
+        boolean isDuplicate;
+        do {
+            int randomNumber = new Random().nextInt(90000) + 10000;
+            String tempId = prefix + randomNumber;
 
-        // Use shortDesc as name if needed
+            isDuplicate = ticketList.stream()
+                    .anyMatch(t -> t.getIds().equalsIgnoreCase(tempId));
+
+            if (!isDuplicate) {
+                generatedId = tempId;
+            }
+        } while (isDuplicate);
+
+        ticket.setIds(generatedId);
+
+        // Use shortDesc as fallback for name
         if (ticket.getName() == null || ticket.getName().isEmpty()) {
             ticket.setName(ticket.getShortDesc() != null ? ticket.getShortDesc() : "Ticket " + newId);
         }
 
-        // Use shortDesc as desc fallback
+        // Use shortDesc as fallback for desc
         if (ticket.getDesc() == null || ticket.getDesc().isEmpty()) {
             ticket.setDesc(ticket.getShortDesc() != null ? ticket.getShortDesc() : "N/A");
         }
@@ -281,7 +295,4 @@ public class Controller {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ticket with IDS: " + ids + " not found");
     }
-
-
-
 }
