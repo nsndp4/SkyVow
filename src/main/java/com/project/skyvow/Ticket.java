@@ -15,8 +15,9 @@ public class Ticket {
     private String reporter;
     private String desc;
     private String priority;
-    private String category;
     private List<String> comment = new ArrayList<>();
+    private String shortDesc;
+    private String problemDesc;
 
     public int getId() {return id;}
 
@@ -93,13 +94,37 @@ public class Ticket {
         this.comment.add(newComment);
     }
 
-    public String getCategory() {
-        return category;
+    public String getProblemDesc() {
+        return problemDesc;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setProblemDesc(String problemDesc) {
+        this.problemDesc = problemDesc;
     }
 
+    public String getShortDesc() {
+        return shortDesc;
+    }
+
+    public void setShortDesc(String shortDesc) {
+        this.shortDesc = shortDesc;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", ids='" + ids + '\'' +
+                ", name='" + name + '\'' +
+                ", status='" + status + '\'' +
+                ", assignee='" + assignee + '\'' +
+                ", reporter='" + reporter + '\'' +
+                ", desc='" + desc + '\'' +
+                ", priority='" + priority + '\'' +
+                ", comment=" + comment +
+                ", shortDesc='" + shortDesc + '\'' +
+                ", problemDesc='" + problemDesc + '\'' +
+                '}';
+    }
 }
 

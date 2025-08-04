@@ -1,6 +1,8 @@
 package com.project.skyvow;
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -11,13 +13,14 @@ import java.util.Random;
 import static java.time.Clock.tick;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000") // Allow frontend
 public class Controller {
 
     List<Ticket> ticketList = new ArrayList<>();
     Ticket ticket = new Ticket();
 
 
-   @PostMapping("/api/v1/tickets/different")
+   @PostMapping("/api/v1/tickets/createDifferentTicketIds")
    public List<Ticket> createDifferent(@RequestBody List<Ticket> createTickets){
        for(Ticket createticket:createTickets){
            Ticket ticket=new Ticket();
@@ -54,26 +57,10 @@ public class Controller {
         return ticketList;
    }
 
-   /*
-   @PostMapping("/api/v1/tickets/statusChange")
-   public static String changeStatus(@PathVariable String ids,@RequestBody TicketStatus statusChange){
-           String currentStatus="";
-           String futureState="";
-           for(TicketStatus status:TicketStatus.values()){
-               if(ts.getIds().equals(ids)){
-                   currentStatus=ts.getStatus();
-                   //futureState=ts.setStatus(statusChange.getStatus());
-                   futureState=statusChange;
-                   //if(currentStatus.val)
-                   swich(TicketStatus)                   }
-                   TicketStatus.OPEN.getCode();
-               }
-           }
-*/
 
 
-    @PostMapping("/api/v1/tickets")
-    public String createMultipleTicket(@RequestBody List<Ticket> createTickets) {
+    @PostMapping("/api/v1/tickets/createMultipleTickets")
+    public List<Ticket> createMultipleTicket(@RequestBody List<Ticket> createTickets) {
         for (Ticket createticket : createTickets) {
             Ticket ticket = new Ticket();
         ticket.setId(createticket.getId());
@@ -92,21 +79,12 @@ public class Controller {
 
         ticketList.add(ticket);
     }
-        return "Tickets created successfully"+createTickets.size();
+        return ticketList;
     }
 
-    @GetMapping("/api/v1/ticket/{id}")
-    public String getTicketById(@PathVariable int id) {
-        for (Ticket ts : ticketList) {
-            if (ts.getId() == id) {
-                System.out.println("The ticket:" + ts.getName());
-                return ts.getName() + " " + ts.getDesc() + " " + ts.getPriority();
-            }
-        }
-        return "Not found";
-    }
 
-    @GetMapping("/api/v1/tickets/{id}")
+
+    @GetMapping("/api/v1/tickets/getsEntireTicketDescription/{id}")
     public Ticket getById(@PathVariable int id) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
@@ -118,7 +96,7 @@ public class Controller {
     }
 
 
-    @GetMapping("/api/v1/tickets")
+    @GetMapping("/api/v1/tickets/displaysCertainNumberOfTicketsBasedOnPageNumber")
     public List<Ticket> getFilteredAndPagedTickets(
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String assignee,
@@ -155,57 +133,62 @@ public class Controller {
         return filtered.subList(fromIndex, toIndex);
     }
 
-    @PutMapping("api/v1/tickets/{id}")
-    public String updates(@PathVariable int id, @RequestBody Ticket updatedticket) {
+    @PutMapping("api/v1/tickets/updatingATicket/{id}")
+    public Ticket updates(@PathVariable int id, @RequestBody Ticket updatedticket) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
+                ts.setName(updatedticket.getName());
+                ts.setStatus(updatedticket.getStatus());
+                ts.setAssignee(updatedticket.getAssignee());
+                ts.setReporter(updatedticket.getReporter());
                 ts.setDesc(updatedticket.getDesc());
                 ts.setPriority(updatedticket.getPriority());
-                System.out.println("Updated ticket desc: " + ts.getDesc() + "priority: " + ts.getPriority());
-                return "ticket updated successfully";
+                if (ts.getComment() != null) {
+                    ts.setComment(new ArrayList<>(updatedticket.getComment()));
+                } else {
+                    ts.setComment(new ArrayList<>());
+                }
+                return ts;
             }
         }
-        return "ticket not found";
+        return null;
     }
 
-    @PutMapping("api/v1/tickets/{id}/assign")
-    public String assign(@PathVariable int id, @RequestBody Ticket assigner) {
+    @PutMapping("api/v1/tickets/assignATicketToAUser/{id}")
+    public Ticket assign(@PathVariable int id, @RequestBody Ticket assigner) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
                 ts.setAssignee(assigner.getAssignee());
-                System.out.println("The ticket ID: " + ts.getId() + "is assigned to the user: " + ts.getAssignee());
-                return "Ticket assigned successfully";
+                return ts;
             }
         }
-        return "not found";
+        return null;
     }
 
-    @PutMapping("/api/v1/tickets/{id}/status")
-    public String statusUpdate(@PathVariable int id, @RequestBody Ticket upStat) {
+    @PutMapping("/api/v1/tickets/updateTheStatusOfATicket/{id}")
+    public Ticket statusUpdate(@PathVariable int id, @RequestBody Ticket upStat) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
                 ts.setStatus(upStat.getStatus());
-                System.out.println("Updated status: " + ts.getStatus());
-                return "Status updated successfully";
+                return ts;
             }
         }
-        return "not found";
+        return null;
     }
 
-    @PostMapping("/api/v1/tickets/{id}/comments")
-    public List<String> newComm(@PathVariable int id, @RequestBody String newComment) {
+    @PostMapping("/api/v1/tickets/addsANewCommentToATicket/{id}")
+    public Ticket newComm(@PathVariable int id, @RequestBody String newComment) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
                 ts.getComment().add(newComment);
-                System.out.println("Comment is updated" + ts.getComment());
-                return ts.getComment();
+                return ts;
             }
         }
-        return new ArrayList<>();
+        return null;
     }
 
 
-    @GetMapping("/api/v1/tickets/{id}/comments")
+    @GetMapping("/api/v1/tickets/retrievesAllCommentsOfATicket/{id}")
     public List<String> getAllComments(@PathVariable int id) {
         for (Ticket ts : ticketList) {
             if (ts.getId() == id) {
@@ -220,7 +203,7 @@ public class Controller {
     }
 
 
-    @DeleteMapping("/api/v1/tickets/{id}")
+    @DeleteMapping("/api/v1/tickets/deletesATicket/{id}")
     public String deleteTicket(@PathVariable int id) {
        Iterator<Ticket> iterator=ticketList.iterator();
        while(iterator.hasNext()){
@@ -230,6 +213,86 @@ public class Controller {
                return "Ticket with ID: "+id+" is deleted";
            }
        }
-       return "Ticket with ID: "+id+" is not found";
+       return null;
+    }
+
+
+    @PostMapping("/api/v1/tickets/createNewTicket")
+    public ResponseEntity<Ticket> createNewTicket(@RequestBody Ticket ticket) {
+        int newId = ticketList.size() + 1;
+        ticket.setId(newId);
+
+        // Always set status as OPEN
+        ticket.setStatus("OPEN");
+
+        // Randomly assign category and generate corresponding unique ID
+        String[] categories = {"incident", "problem", "change", "general"};
+        String category = categories[new Random().nextInt(categories.length)];
+
+        String prefix;
+        switch (category.toLowerCase()) {
+            case "incident":
+                prefix = "INC";
+                break;
+            case "problem":
+                prefix = "PRB";
+                break;
+            case "change":
+                prefix = "CHG";
+                break;
+            default:
+                prefix = "GEN";
+        }
+
+        // ✅ Ensure unique ticket ID
+        String generatedId = "";
+        boolean isDuplicate;
+        do {
+            int randomNumber = new Random().nextInt(90000) + 10000;
+            String tempId = prefix + randomNumber;
+
+            isDuplicate = ticketList.stream()
+                    .anyMatch(t -> t.getIds().equalsIgnoreCase(tempId));
+
+            if (!isDuplicate) {
+                generatedId = tempId;
+            }
+        } while (isDuplicate);
+
+        ticket.setIds(generatedId);
+
+        // Use shortDesc as fallback for name
+        if (ticket.getName() == null || ticket.getName().isEmpty()) {
+            ticket.setName(ticket.getShortDesc() != null ? ticket.getShortDesc() : "Ticket " + newId);
+        }
+
+        // Use shortDesc as fallback for desc
+        if (ticket.getDesc() == null || ticket.getDesc().isEmpty()) {
+            ticket.setDesc(ticket.getShortDesc() != null ? ticket.getShortDesc() : "N/A");
+        }
+
+        if (ticket.getComment() == null) {
+            ticket.setComment(new ArrayList<>());
+        }
+
+        ticketList.add(ticket);
+
+        System.out.println("Created Ticket: " + ticket + " [Category: " + category + "]");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
+    }
+
+
+    @DeleteMapping("/api/v1/tickets/deletesATicketByIds/{ids}")
+    public ResponseEntity<String> deleteTicketByIds(@PathVariable String ids) {
+        Iterator<Ticket> iterator = ticketList.iterator();
+        while (iterator.hasNext()) {
+            Ticket ts = iterator.next();
+            if (ts.getIds().equalsIgnoreCase(ids)) {
+                iterator.remove();
+                return ResponseEntity.ok("Ticket with IDS: " + ids + " is deleted");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ticket with IDS: " + ids + " not found");
     }
 }
