@@ -38,8 +38,8 @@ public class Ticket {
     @Column(name = "assigned_to", nullable = false)
     private String assignedTo;
 
-    @Column(name = "app_name", nullable = false)
-    private String appName;
+    @Column(name = "configuration_item", nullable = false)
+    private String configurationItem;
 
     // ⬇️ IMPORTANT: comments are now a OneToMany of entities (not List<String>)
     @OneToMany(
@@ -85,8 +85,8 @@ public class Ticket {
     public String getAssignedTo() { return assignedTo; }
     public void setAssignedTo(String assignedTo) { this.assignedTo = assignedTo; }
 
-    public String getAppName() { return appName; }
-    public void setAppName(String appName) { this.appName = appName; }
+    public String getConfigurationItem() { return configurationItem; }
+    public void setConfigurationItem(String configurationItem) { this.configurationItem = configurationItem; }
 
     public List<TicketComments> getComments() { return comments; }
     public void setComments(List<TicketComments> comments) { this.comments = comments; }

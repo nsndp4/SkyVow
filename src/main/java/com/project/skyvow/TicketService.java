@@ -37,7 +37,7 @@ public class TicketService {
         if (ticket.getSeverity() == null || ticket.getSeverity().isBlank()) ticket.setSeverity("SEV3");
         if (ticket.getShortDescription() == null || ticket.getShortDescription().isBlank()) ticket.setShortDescription("N/A");
         if (ticket.getDescription() == null || ticket.getDescription().isBlank()) ticket.setDescription(ticket.getShortDescription());
-        if (ticket.getAppName() == null || ticket.getAppName().isBlank()) ticket.setAppName("UNKNOWN");
+        if (ticket.getConfigurationItem() == null || ticket.getConfigurationItem().isBlank()) ticket.setConfigurationItem("UNKNOWN");
         if (ticket.getAssignedTo() == null || ticket.getAssignedTo().isBlank()) ticket.setAssignedTo("UNASSIGNED");
         if (ticket.getReportedBy() == null || ticket.getReportedBy().isBlank()) ticket.setReportedBy("SYSTEM");
         if (ticket.getCreatedDate() == null) ticket.setCreatedDate(LocalDateTime.now());
@@ -79,7 +79,7 @@ public class TicketService {
         v.setStatus(t.getStatus());
         v.setAssignedTo(t.getAssignedTo());
         v.setComments(commentTexts);
-        v.setAppName(t.getAppName());
+        v.setConfigurationItem(t.getConfigurationItem());
         return v;
     }
 
@@ -95,7 +95,7 @@ public class TicketService {
         private String status;
         private String assignedTo;
         private List<String> comments;
-        private String appName;
+        private String configurationItem;
 
         // getters/setters
         public String getTicketsIds() { return ticketsIds; }
@@ -118,7 +118,7 @@ public class TicketService {
         public void setAssignedTo(String assignedTo) { this.assignedTo = assignedTo; }
         public List<String> getComments() { return comments; }
         public void setComments(List<String> comments) { this.comments = comments; }
-        public String getAppName() { return appName; }
-        public void setAppName(String appName) { this.appName = appName; }
+        public String getConfigurationItem() { return configurationItem; }
+        public void setConfigurationItem(String configurationItem) { this.configurationItem = configurationItem; }
     }
 }
