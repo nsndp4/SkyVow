@@ -55,4 +55,24 @@ public class Incident extends Ticket {
 
     @Column(columnDefinition = "TEXT")
     private String notes;
+
+    @Override
+    public String toString() {
+        return "Incident{" +
+                "onBehalfOf='" + onBehalfOf + '\'' +
+                ", category='" + category + '\'' +
+                ", subcategory='" + subcategory + '\'' +
+                ", supportAgreementName='" + supportAgreementName + '\'' +
+                ", platform='" + platform + '\'' +
+                ", impactedLOB='" + impactedLOB + '\'' +
+                ", jiraReference='" + jiraReference + '\'' +
+                ", impact='" + impact + '\'' +
+                ", urgency='" + urgency + '\'' +
+                ", priority='" + priority + '\'' +
+                ", reportedBy='" + reportedBy + '\'' +
+                ", regulatoryImpact='" + regulatoryImpact + '\'' +
+                ", totalImpactDuration='" + totalImpactDuration + '\'' +
+                ", notes='" + notes + '\'' +
+                '}';
+    }
 }

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -25,6 +26,9 @@ public abstract class Ticket {
     @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDateTime createdDate = LocalDateTime.now();
 
+    @Column(name = "last_modified_date")
+    private LocalDateTime lastModifiedDate;
+
     @NotBlank
     @Column(name = "created_by", nullable = false)
     private String createdBy;
@@ -34,9 +38,14 @@ public abstract class Ticket {
         if (createdDate == null) {
             createdDate = LocalDateTime.now();
         }
+        lastModifiedDate = createdDate;  // initialize same as created date
     }
 
-    @NotBlank
+    @PreUpdate
+    protected void onUpdate() {
+        lastModifiedDate = LocalDateTime.now();
+    }
+
     @Column(name = "assigned_to", nullable = false)
     private String assignedTo;
 
@@ -55,4 +64,21 @@ public abstract class Ticket {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", ticketNumber='" + ticketNumber + '\'' +
+                ", status='" + status + '\'' +
+                ", createdDate=" + createdDate +
+                ", lastModifiedDate=" + lastModifiedDate +
+                ", createdBy='" + createdBy + '\'' +
+                ", assignedTo='" + assignedTo + '\'' +
+                ", assignedGroup='" + assignedGroup + '\'' +
+                ", configurationItem='" + configurationItem + '\'' +
+                ", shortDescription='" + shortDescription + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
